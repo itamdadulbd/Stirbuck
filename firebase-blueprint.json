@@ -1,0 +1,86 @@
+{
+  "entities": {
+    "user": {
+      "title": "User",
+      "description": "User profile and loyalty data",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string" },
+        "displayName": { "type": "string" },
+        "points": { "type": "integer" },
+        "preferences": {
+          "type": "object",
+          "properties": {
+            "favoriteCategory": { "type": "string" },
+            "dietaryRestriction": { "type": "string" }
+          }
+        },
+        "lastOrder": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email"]
+    },
+    "product": {
+      "title": "Product",
+      "description": "Coffee or food item",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "description": { "type": "string" },
+        "price": { "type": "number" },
+        "category": { "type": "string", "enum": ["espresso", "brewed", "blended", "bakery", "seasonal"] },
+        "imageUrl": { "type": "string" },
+        "tags": { "type": "array", "items": { "type": "string" } },
+        "nutrition": {
+          "type": "object",
+          "properties": {
+            "calories": { "type": "integer" },
+            "caffeine": { "type": "integer" }
+          }
+        }
+      },
+      "required": ["id", "name", "price", "category"]
+    },
+    "order": {
+      "title": "Order",
+      "description": "Customer order details",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "productId": { "type": "string" },
+              "quantity": { "type": "integer" },
+              "customeizations": { "type": "string" },
+              "priceAtTime": { "type": "number" }
+            }
+          }
+        },
+        "total": { "type": "number" },
+        "status": { "type": "string", "enum": ["pending", "preparing", "ready", "completed", "cancelled"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "userId", "items", "total", "status"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "user",
+      "description": "User profiles"
+    },
+    "/products/{productId}": {
+      "schema": "product",
+      "description": "Catalog of items"
+    },
+    "/orders/{orderId}": {
+      "schema": "order",
+      "description": "Order history"
+    }
+  }
+}
